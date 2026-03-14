@@ -19,6 +19,26 @@ jobs:
       os-matrix: '"ubuntu-latest", "windows-latest"'
       typecheck: pnpm run build && pnpm run typecheck
 
+  unit-test-vite:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        vite-version: [6, 7, 8]
+    name: unit-test (vite ${{ matrix.vite-version }})
+    steps:
+      - name: Setup JS
+        uses: sxzz/workflows/setup-js@v1
+
+      - name: Override Vite version
+        run: pnpm add -D vite@^${{ matrix.vite-version }}
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Test
+        run: pnpm run test
+
   unit-test-bun:
     runs-on: ubuntu-latest
     steps:
